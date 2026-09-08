@@ -16,20 +16,20 @@ function App() {
         {/* Public Route */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes wrapped in the Layout (which likely contains your Sidebar) */}
-        <Route path="/" element={<Layout />}>
-          {/* Automatically redirect the root path to the dashboard */}
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          {/* Protected Dashboard Route */}
+        {/* Protected Layout: Everything inside requires a valid session token */}
         <Route 
-          path="/dashboard" 
+          path="/" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout />
             </ProtectedRoute>
-          } 
-        />
+          }
+        >
+          {/* Automatically redirect the root path to the dashboard */}
+          <Route index element={<Navigate to="/dashboard" replace />} />
           
+          {/* Protected Inner Routes */}
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="leads" element={<LeadsManager />} />
           <Route path="sales" element={<SalesDashboard />} />
         </Route>

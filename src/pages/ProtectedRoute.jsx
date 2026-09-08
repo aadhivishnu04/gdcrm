@@ -3,9 +3,10 @@ import { getToken } from '../utils/auth';
 
 export const ProtectedRoute = ({ children }) => {
     const token = getToken();
+    const user = localStorage.getItem('user');
 
-    // Redirect to login if no token exists or if it's an unauthenticated default state
-    if (!token || token === 'demo-token') {
+    // Strict check: bounce to login if token is missing, invalid, or user data doesn't exist
+    if (!token || token === 'demo-token' || !user) {
         return <Navigate to="/login" replace />;
     }
 
