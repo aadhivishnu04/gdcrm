@@ -1,6 +1,10 @@
 // src/utils/auth.js
 import { setToken, clearToken } from './api';
 
+export const getToken = () => {
+    return localStorage.getItem('token');
+};
+
 export const getCurrentUser = () => {
     const userStr = localStorage.getItem('user');
     if (!userStr) return null;
