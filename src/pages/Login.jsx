@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Lock, Loader2, ShieldCheck } from 'lucide-react';
-import { loginUser } from '../utils/auth';
+import { loginUser, getToken } from '../utils/auth';
 import { API_BASE_URL, apiFetch } from '../utils/api';
 
 // 1. ADDED: Import the image from your assets folder. 
@@ -28,6 +28,14 @@ const Login = () => {
     const navigate = useNavigate();
 
     useLoginFonts();
+
+    // Redirect to dashboard if a valid session token already exists
+    useEffect(() => {
+        const token = getToken();
+        if (token) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
