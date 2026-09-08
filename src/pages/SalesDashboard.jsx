@@ -22,7 +22,7 @@ const getDefaultTripType = (lead) => {
     return INDIAN_DESTINATION_KEYWORDS.some(place => destination.includes(place)) ? 'Domestic' : 'International';
 };
 
-// ─── NEW LEAD FORM INITIAL STATE ─────────────────────────────────────────────
+ 
 // ─── NEW LEAD FORM INITIAL STATE ─────────────────────────────────────────────
 const initialNewLeadState = {
     customerName: '',
@@ -1618,13 +1618,12 @@ const SalesDashboard = () => {
         const isRecycleBin = (item.followupCount >= 10 || item.followUpCount >= 10 || itemStatus === 'Recycle Bin');
 
         if (activeTab === 'Recycle') matchTab = isRecycleBin;
-        else if (isRecycleBin) matchTab = false; 
+      else if (isRecycleBin) matchTab = false; 
         else if (activeTab === 'My Jobs') {
-            const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation';
+            const isUnassigned = !item.assignedTo || item.assignedTo === 'Unassigned';
+            const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
+            
             const isRegularSalesJob = !leftSalesPipeline && (isAdmin || item.assignedTo === loggedInUserName);
-            // Customisation Ready and Booking Confirmed ("My Confirmation") leads belong to the
-            // sales rep too, so they should keep showing up in My Jobs alongside the regular
-            // pipeline items instead of only living in their own dedicated tabs.
             const isMyCustomisationReady = (itemStatus === 'Shared to Sales' || itemStatus === 'Customisation Ready') && (isAdmin || item.assignedTo === loggedInUserName);
             const isMyConfirmation = item.customerResponse === 'Booking Confirmed' && (isAdmin || item.assignedTo === loggedInUserName);
             matchTab = isRegularSalesJob || isMyCustomisationReady || isMyConfirmation;
@@ -1635,9 +1634,7 @@ const SalesDashboard = () => {
         else if (activeTab === 'My Confirmation') { 
             matchTab = item.customerResponse === 'Booking Confirmed' && (isAdmin || item.assignedTo === loggedInUserName); 
         }
-        else if (activeTab === 'Jobs') { matchTab = itemStatus === 'Jobs'; }
-
-        return matchSearch && matchPlatform && matchTab;
+        else if (activeTab === 'Jobs') { matchTab = itemStatus === 'Jobs' || !item.assignedTo || item.assignedTo === 'Unassigned'; }
     });
 
     const paymentSearchData = jobs.filter(item => {
@@ -1688,7 +1685,9 @@ const SalesDashboard = () => {
                         if (cat.id === 'Recycle') return isRecycleBin;
                         if (isRecycleBin) return false;
 
-                        const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation';
+                       const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
+                        const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
+                        
                         if (cat.id === 'My Jobs') {
                             const isRegularSalesJob = !leftSalesPipeline && (isAdmin || d.assignedTo === loggedInUserName);
                             const isMyCustomisationReady = (itemStatus === 'Shared to Sales' || itemStatus === 'Customisation Ready') && (isAdmin || d.assignedTo === loggedInUserName);
@@ -1696,6 +1695,7 @@ const SalesDashboard = () => {
                             return isRegularSalesJob || isMyCustomisationReady || isMyConfirmation;
                         }
                         if (cat.id === 'My Confirmation') return d.customerResponse === 'Booking Confirmed' && (isAdmin || d.assignedTo === loggedInUserName);
+                        if (cat.id === 'Jobs') return itemStatus === 'Jobs' || isUnassigned;
                         return itemStatus === cat.id;
                     }).length;
                     
@@ -1726,7 +1726,9 @@ const SalesDashboard = () => {
                             if (cat.id === 'Recycle') return isRecycleBin;
                             if (isRecycleBin) return false;
 
-                            const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation';
+                        const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
+                            const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
+                            
                             if (cat.id === 'My Jobs') {
                                 const isRegularSalesJob = !leftSalesPipeline && (isAdmin || d.assignedTo === loggedInUserName);
                                 const isMyCustomisationReady = (itemStatus === 'Shared to Sales' || itemStatus === 'Customisation Ready') && (isAdmin || d.assignedTo === loggedInUserName);
@@ -1734,6 +1736,7 @@ const SalesDashboard = () => {
                                 return isRegularSalesJob || isMyCustomisationReady || isMyConfirmation;
                             }
                             if (cat.id === 'My Confirmation') return d.customerResponse === 'Booking Confirmed' && (isAdmin || d.assignedTo === loggedInUserName);
+                            if (cat.id === 'Jobs') return itemStatus === 'Jobs' || isUnassigned;
                             return itemStatus === cat.id;
                         }).length;
 

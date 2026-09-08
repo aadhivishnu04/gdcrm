@@ -376,19 +376,19 @@ const Dashboard = () => {
         companyName: '',
         
         // Business Requirement
-        businessType: 'Product', // Default value to avoid placeholders
+        businessType: '', // Default value to avoid placeholders
         requirement: '',
         budget: '',
         expectedPurchaseDate: '',
-        priority: 'Medium',
+        priority: '',
         requirementDetails: '',
         
         // Lead Source
-        leadSource: 'Website',
+        leadSource: '',
         sourceDetails: '',
         
         // Lead Management
-        leadStatus: 'New',
+        leadStatus: '',
         assignedTo: '',
         followupDate: '',
         notes: ''
