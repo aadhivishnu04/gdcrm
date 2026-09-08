@@ -6,7 +6,7 @@ import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
 import LeadsManager from './pages/LeadsManager';
 import SalesDashboard from './pages/SalesDashboard';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from "./pages/ProtectedRoute";
 import './App.css';
 
 function App() {
