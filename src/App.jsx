@@ -6,7 +6,7 @@ import Layout from './pages/Layout';
 import Dashboard from './pages/Dashboard';
 import LeadsManager from './pages/LeadsManager';
 import SalesDashboard from './pages/SalesDashboard';
-
+import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -20,8 +20,16 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* Automatically redirect the root path to the dashboard */}
           <Route index element={<Navigate to="/dashboard" replace />} />
+          {/* Protected Dashboard Route */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
           
-          <Route path="dashboard" element={<Dashboard />} />
           <Route path="leads" element={<LeadsManager />} />
           <Route path="sales" element={<SalesDashboard />} />
         </Route>
