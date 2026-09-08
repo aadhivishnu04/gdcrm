@@ -22,7 +22,6 @@ const getDefaultTripType = (lead) => {
     return INDIAN_DESTINATION_KEYWORDS.some(place => destination.includes(place)) ? 'Domestic' : 'International';
 };
 
- 
 // ─── NEW LEAD FORM INITIAL STATE ─────────────────────────────────────────────
 const initialNewLeadState = {
     customerName: '',
@@ -848,6 +847,10 @@ const SalesDashboard = () => {
         try {
             if (!isSilent) setIsLoading(true);
             const data = await apiFetch('/leads');
+            if (!Array.isArray(data)) {
+                console.error('Unexpected /leads response shape (not an array):', data);
+                return;
+            }
             const sanitized = data.map(item => {
                 let parsedHistory = [];
                 if (typeof item.history === 'string') { try { parsedHistory = JSON.parse(item.history); } catch(e) {} } 
@@ -1618,7 +1621,7 @@ const SalesDashboard = () => {
         const isRecycleBin = (item.followupCount >= 10 || item.followUpCount >= 10 || itemStatus === 'Recycle Bin');
 
         if (activeTab === 'Recycle') matchTab = isRecycleBin;
-      else if (isRecycleBin) matchTab = false; 
+        else if (isRecycleBin) matchTab = false; 
         else if (activeTab === 'My Jobs') {
             const isUnassigned = !item.assignedTo || item.assignedTo === 'Unassigned';
             const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
@@ -1635,6 +1638,8 @@ const SalesDashboard = () => {
             matchTab = item.customerResponse === 'Booking Confirmed' && (isAdmin || item.assignedTo === loggedInUserName); 
         }
         else if (activeTab === 'Jobs') { matchTab = itemStatus === 'Jobs' || !item.assignedTo || item.assignedTo === 'Unassigned'; }
+
+        return matchSearch && matchPlatform && matchTab;
     });
 
     const paymentSearchData = jobs.filter(item => {
@@ -1685,7 +1690,7 @@ const SalesDashboard = () => {
                         if (cat.id === 'Recycle') return isRecycleBin;
                         if (isRecycleBin) return false;
 
-                       const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
+                        const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
                         const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
                         
                         if (cat.id === 'My Jobs') {
@@ -1726,7 +1731,7 @@ const SalesDashboard = () => {
                             if (cat.id === 'Recycle') return isRecycleBin;
                             if (isRecycleBin) return false;
 
-                        const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
+                            const isUnassigned = !d.assignedTo || d.assignedTo === 'Unassigned';
                             const leftSalesPipeline = itemStatus === 'Jobs' || itemStatus === 'Move To Operation' || isUnassigned;
                             
                             if (cat.id === 'My Jobs') {
